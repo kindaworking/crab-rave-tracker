@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+def localBuildDir = providers.gradleProperty('localBuildDir')
+if (localBuildDir.isPresent()) {
+    layout.buildDirectory.set(file(localBuildDir.get()))
+}
+
+repositories {
+    maven {
+        url = 'https://repo.runelite.net'
+        content {
+            includeGroupByRegex('net\\.runelite.*')
+        }
+    }
+
+    mavenCentral()
+}
+
+def runeLiteVersion = '1.13.1'
+group = 'com.emotetracker'
+version = '0.1.0'
+
+dependencies {
+    compileOnly "net.runelite:client:${runeLiteVersion}"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release.set(11)
+}
