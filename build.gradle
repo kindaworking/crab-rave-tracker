@@ -20,10 +20,28 @@ repositories {
 
 def runeLiteVersion = '1.13.1'
 group = 'com.emotetracker'
-version = '0.1.0'
+version = '0.2.0'
+
+sourceSets {
+    dev {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
 
 dependencies {
     compileOnly "net.runelite:client:${runeLiteVersion}"
+    devImplementation "net.runelite:client:${runeLiteVersion}"
+    devRuntimeOnly "net.runelite:jshell:${runeLiteVersion}"
+}
+
+tasks.register('run', JavaExec) {
+    group = 'application'
+    description = 'Launch RuneLite with the local Crab Rave Tracker plugin.'
+    classpath = sourceSets.dev.runtimeClasspath
+    mainClass = 'com.emotetracker.EmoteTrackerLauncher'
+    jvmArgs '-ea'
+    args '--developer-mode', '--debug'
 }
 
 tasks.withType(JavaCompile).configureEach {
